@@ -132,7 +132,7 @@ diff = np.max(np.abs(x - xnew))
 print(diff)
 '''
 
-
+'''
 #Erotima 4
 def calculateDiff(n):
     Hil = Hilbert(n)
@@ -144,16 +144,40 @@ def calculateDiff(n):
     diff = np.max(np.abs(x - xnew))
     return diff
 
-n = 20
-xpoints = np.array([i for i in range(1, n+1)])
+def plotDiff(n):
+    xpoints = np.array([i for i in range(1, n+1)])
 
-ypoints = np.ones((n, 1))
-for i in range(1,n+1):
-    ypoints[i-1] = calculateDiff(i)
-print(ypoints)
+    ypoints = np.ones((n, 1))
+    for i in range(1,n+1):
+        ypoints[i-1] = calculateDiff(i)
+    #print(ypoints)
 
-plt.plot(xpoints, ypoints)
-plt.show()
+    plt.plot(xpoints, ypoints)
+    plt.show()
+
+plotDiff(20)
+'''
+
+def calculateNorm(n):
+    Hil = Hilbert(n)
+    InvHil = np.linalg.inv(Hil)
+
+    norm2 = np.linalg.norm(np.identity(n) - Hil * InvHil)
+    return norm2
+
+
+def plotNorm(n):
+    xpoints = np.array([i for i in range(1, n+1)])
+
+    ypoints = np.ones((n, 1))
+    for i in range(1,n+1):
+        ypoints[i-1] = calculateNorm(i)
+    print(ypoints)
+
+    plt.plot(xpoints, ypoints)
+    plt.show()
+
+plotNorm(20)
 
 
 
