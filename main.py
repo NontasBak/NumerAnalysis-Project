@@ -19,7 +19,7 @@ def QRmine(A):
     n = A.shape[0]
     Q = np.matrix( np.zeros( (n,n) ) )
     for j in range(0, n):
-        q = A[:,j]
+        q = A[:,j:j+1]
         for i in range(0, j):
             length_of_leg = np.sum( A[:,j].T * Q[:,i])
             q = q - length_of_leg * Q[:,i]
@@ -83,8 +83,8 @@ def LUsolve(A, b):
     L = LU[0]
     U = LU[1]
     n = b.shape[0]
-    y = np.matrix( np.ones(n) ).reshape((3,1))
-    x = np.matrix( np.ones(n) ).reshape((3,1))
+    y = np.matrix( np.ones(n) ).reshape((n,1))
+    x = np.matrix( np.ones(n) ).reshape((n,1))
 
     for i in range(n):
         y[i] = (b[i] - np.sum(L[i,:i] * y[:i])) / L[i,i]
@@ -100,8 +100,9 @@ def QRsolve(A, b):
     R = QR[1]
     n = b.shape[0]
 
-    y = Q.T * b
-    x = np.matrix( np.ones(n) ).reshape((3,1))
+    y = Q.T.dot(b)
+    y = y.T
+    x = np.matrix( np.ones(n) ).reshape((n,1))
 
     for i in range(n-1, -1, -1):
         x[i] = (y[i] - np.sum(R[i,i+1:] * x[i+1:])) / R[i,i]
@@ -158,6 +159,8 @@ def plotDiff(n):
 plotDiff(20)
 '''
 
+'''
+#Erotima 5
 def calculateNorm(n):
     Hil = Hilbert(n)
     InvHil = np.linalg.inv(Hil)
@@ -166,18 +169,98 @@ def calculateNorm(n):
     return norm2
 
 
-def plotNorm(n):
+def plotNorms(n):
     xpoints = np.array([i for i in range(1, n+1)])
 
     ypoints = np.ones((n, 1))
     for i in range(1,n+1):
         ypoints[i-1] = calculateNorm(i)
-    print(ypoints)
+    #print(ypoints)
 
     plt.plot(xpoints, ypoints)
     plt.show()
 
-plotNorm(20)
+plotNorms(20)
+'''
+
+
+def calculate_T_values(min, max, points):
+    T = np.empty(points)
+    h = (max - min) / points
+
+    for i in range(points):
+        T[i] = min + h * i
+
+    return T
+
+
+def calculate_Y_values(T):
+    Y = np.empty(T.shape[0])
+
+    Y[:] = np.cos(4 * T[:]) + 0.1 * np.random.randn(T.shape[0])
+    #Y = np.array([3,2,4,4])
+    return Y
+
+
+def solveLeastSquares(T, Y, grade):
+    A = np.ones((T.shape[0] , grade))
+
+    for j in range(1, grade):
+        A[:, j] = T[:] ** j
+
+    x1 = QRsolve(A.T.dot(A), A.T.dot(Y))
+    x2 = LUsolve(A.T.dot(A), A.T.dot(Y))
+
+    print("polynomial with QR:")
+    print(x1)
+
+    print("polynomial with LU:")
+    print(x2)
+
+    return A, x1, x2
+
+def leastSquaresError(A, x1, x2, Y):
+    r1 = Y - A.dot(x1)
+    r2 = Y - A.dot(x2)
+
+    r1 = np.linalg.norm(r1)
+    r2 = np.linalg.norm(r2)
+    return r1, r2
+
+
+
+def plotApproximation(T, Y, x1, x2):
+    plt.plot(T, Y, color = 'r', label="y(t)")
+    
+    x = np.linspace(0,1,100)
+    y1 = [np.polyval(x1, i) for i in x]
+    plt.plot(x, y1, color = 'b', label="p1(t)")
+
+    y2 = [np.polyval(x2, i) for i in x]
+    plt.plot(x, y2, color = 'g', label="p2(t)")
+    
+    plt.show()
+    
+
+
+T = calculate_T_values(0, 1, 50)
+Y = calculate_Y_values(T)
+A_and_solution = solveLeastSquares(T, Y, 4)
+R = leastSquaresError(A_and_solution[0], A_and_solution[1], A_and_solution[2], Y)
+plotApproximation(T, Y, A_and_solution[1], A_and_solution[2])
+
+
+
+
+
+    
+
+
+
+
+
+
+
 
 
 
