@@ -61,6 +61,7 @@ def solvewithLU_Axb(A, b):
     return x
 
 '''
+#Erotima 2
 n = 4
 Hil = Hilbert(n)
 b = np.ones((n, 1))
@@ -113,6 +114,63 @@ b = np.matrix([3,2,4]).reshape((3,1))
 print(solveWithQR_Axb(A, b))
 print(QRsolve(A, b))
 '''
+
+
+
+'''
+#Erotima 3
+n = 5
+Hil = Hilbert(n)
+b = np.ones((n, 1))
+
+bNew = b + 1e-15
+
+x = solveWithQR_Axb(Hil, b)
+xnew = solveWithQR_Axb(Hil, bNew)
+
+diff = np.max(np.abs(x - xnew))
+print(diff)
+'''
+
+
+#Erotima 4
+def calculateDiff(n):
+    Hil = Hilbert(n)
+    b = np.ones((n, 1))
+    bNew = b + 1e-15
+    x = solveWithQR_Axb(Hil, b)
+    xnew = solveWithQR_Axb(Hil, bNew)
+
+    diff = np.max(np.abs(x - xnew))
+    return diff
+
+n = 20
+xpoints = np.array([i for i in range(1, n+1)])
+
+ypoints = np.ones((n, 1))
+for i in range(1,n+1):
+    ypoints[i-1] = calculateDiff(i)
+print(ypoints)
+
+plt.plot(xpoints, ypoints)
+plt.show()
+
+
+
+    
+
+
+    
+
+
+
+
+
+
+
+
+
+
 
 
 
