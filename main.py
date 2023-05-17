@@ -77,5 +77,49 @@ print(solution2)
 print(Hil * solution2)
 '''
 
+def LUsolve(A, b):
+    LU = LUmine(A)
+    L = LU[0]
+    U = LU[1]
+    n = b.shape[0]
+    y = np.matrix( np.ones(n) ).reshape((3,1))
+    x = np.matrix( np.ones(n) ).reshape((3,1))
 
+    for i in range(n):
+        y[i] = (b[i] - np.sum(L[i,:i] * y[:i])) / L[i,i]
+
+    for i in range(n-1, -1, -1):
+        x[i] = (y[i] - np.sum(U[i,i+1:] * x[i+1:])) / U[i,i]
+        
+    return x
+
+def QRsolve(A, b):
+    QR = QRmine(A)
+    Q = QR[0]
+    R = QR[1]
+    n = b.shape[0]
+
+    y = Q.T * b
+    x = np.matrix( np.ones(n) ).reshape((3,1))
+
+    for i in range(n-1, -1, -1):
+        x[i] = (y[i] - np.sum(R[i,i+1:] * x[i+1:])) / R[i,i]
+
+    return x
+
+'''
+A = np.matrix([[1,2,1] , [3,4,2] , [2,5,1]])
+b = np.matrix([3,2,4]).reshape((3,1))
+print(solveWithQR_Axb(A, b))
+print(QRsolve(A, b))
+'''
+
+
+
+
+
+
+
+
+    
 
