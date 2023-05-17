@@ -50,6 +50,8 @@ Hil = Hilbert(5)
 print(Hil)
 '''
 
+'''
+#Old code (works)
 def solveWithQR_Axb(A, b):
     QR = QRmine(A)
     x = np.linalg.inv(QR[1]) * QR[0].T * b
@@ -59,6 +61,7 @@ def solvewithLU_Axb(A, b):
     LU = LUmine(A)
     x = np.linalg.inv(LU[1]) * np.linalg.inv(LU[0]) * b
     return x
+'''
 
 '''
 #Erotima 2
@@ -101,7 +104,6 @@ def QRsolve(A, b):
     n = b.shape[0]
 
     y = Q.T.dot(b)
-    y = y.T
     x = np.matrix( np.ones(n) ).reshape((n,1))
 
     for i in range(n-1, -1, -1):
