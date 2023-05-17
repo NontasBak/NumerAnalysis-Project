@@ -230,14 +230,14 @@ def leastSquaresError(A, x1, x2, Y):
 
 
 def plotApproximation(T, Y, x1, x2):
-    plt.plot(T, Y, color = 'r', label="y(t)")
+    plt.plot(T, Y, color = 'r', label='y(t)')
     
-    x = np.linspace(0,1,100)
-    y1 = [np.polyval(x1, i) for i in x]
-    plt.plot(x, y1, color = 'b', label="p1(t)")
+    x = np.linspace(0,1,100) #100 points in the space [0,1] (for plotting the polynomials)
+    y1 = [np.polyval(np.flip(x1), i) for i in x]
+    plt.plot(x, y1, color = 'b', label='p1(t)')
 
-    y2 = [np.polyval(x2, i) for i in x]
-    plt.plot(x, y2, color = 'g', label="p2(t)")
+    y2 = [np.polyval(np.flip(x2), i) for i in x]
+    plt.plot(x, y2, color = 'g', label='p2(t)')
     
     plt.show()
     
@@ -247,6 +247,7 @@ T = calculate_T_values(0, 1, 50)
 Y = calculate_Y_values(T)
 A_and_solution = solveLeastSquares(T, Y, 4)
 R = leastSquaresError(A_and_solution[0], A_and_solution[1], A_and_solution[2], Y)
+print(R[0], R[1])
 plotApproximation(T, Y, A_and_solution[1], A_and_solution[2])
 
 
